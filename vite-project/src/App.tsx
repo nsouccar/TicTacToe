@@ -36,8 +36,10 @@ function App() {
 
   return (
     <>
+    <header>
 
-    <div className = "grid-container">
+    </header>
+    <div className="grid grid-cols-3 grid-rows-3 gap-4 place-content-center">
       <div id="00"   onClick = {cellClicked} className="grid-item">{currentGameState.board[0][0]}</div>
       <div id = "01" onClick = {cellClicked} className="grid-item">{currentGameState.board[0][1]}</div>
       <div id = "02" onClick = {cellClicked} className="grid-item">{currentGameState.board[0][2]}</div>

@@ -13,11 +13,9 @@ const initialBoard = [
 ]
 
 
-export let currentGame: Game = {
-    currentPlayer: "X",
-    board: initialBoard,
-    result: undefined
-}
+
+
+
 
 
 type CoordIdx = 0 | 1 | 2
@@ -171,9 +169,10 @@ function checkResult(board: Cell[][]): Result {
 export function changeGameState(state: Game, row: number, column: number) {
     let boardCopy = structuredClone(state.board)
     let nextPlayer: Player = state.currentPlayer
+    console.log("state-copy:", state.board)
     if (boardCopy[row]![column] === "") {
         nextPlayer = state.currentPlayer == "X" ? "O" : "X"
-
+        console.log(boardCopy[row]![column])
         boardCopy[row]![column] = nextPlayer
 
     }
@@ -186,8 +185,11 @@ export function changeGameState(state: Game, row: number, column: number) {
     const newGame: Game = {
         currentPlayer: nextPlayer,
         board: boardCopy,
-        result: result
+        result: result,
+        gameId: state.gameId
     }
+
+    console.log("newGame", newGame)
 
 
 

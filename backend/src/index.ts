@@ -24,54 +24,51 @@ const initialBoard = [
 // gameId2: {game2}
 let games: Record<string, Game> = {}
 
-
+app.use((req, res, next) => {
+    console.log("Incoming request:", req.method, req.url);
+    next();
+});
 
 
 app.get('/:id/play', (request: Request, response: Response) => {
-    console.log("games", games)
     const gameId = request.params.id as string
+    console.log("current game: ", gameId)
     if (games[gameId]) {
-        console.log("hello")
+        console.log("current game: ", games[gameId])
         response.send(games[gameId])
+
     } else {
         response.status(404).send("Page not found")
     }
 })
 
 app.post('/:id/play', (request: Request, response: Response) => {
-
-
-
     const gameId = request.params.id as string
     if (games[gameId]) {
         let game = games[gameId]
-        game = changeGameState(game!, request.body[0], request.body[1])
-        console.log("GAME", game)
-        response.send(game)
+        console.log(`request ${request.body}`)
+        const move = request.body.move
+        games[gameId] = changeGameState(game!, move[0], move[1])
+        response.send(games[gameId])
     } else {
         response.status(404).send("Page not found")
     }
-
 })
 
 app.get('/', (request: Request, response: Response) => {
-
     response.send(games)
-
 })
 
-
 // TODO: this is actually "create or join"
-app.post('/join/', (request: Request, response: Response) => {
-    console.log("joining")
+app.post('/join', (request: Request, response: Response) => {
     // THE CLIENT CREATES THE ID:
-    const gameId = request.body as string
+    const gameId = request.body.gameId as string
+    console.log(`request body keys: ${request.body.keys}`)
+    console.log(`body ${request.body}`)
+    console.log(gameId, " joining")
 
     if (games[gameId]) {
-        console.log("games", games)
-
-
-        return games[gameId]
+        return response.json(games[gameId])
     }
 
 
@@ -83,13 +80,12 @@ app.post('/join/', (request: Request, response: Response) => {
     }
 
     games[gameId] = currentGame
-    console.log("games", games)
     response.json(currentGame)
+    console.log("new game created: ", currentGame)
 })
 
 
 const PORT = 3000
 app.listen(PORT, () => {
-    console.log('Server running on port ', { PORT })
 })
 

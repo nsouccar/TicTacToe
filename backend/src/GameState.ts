@@ -166,21 +166,19 @@ function checkResult(board: Cell[][]): Result {
 
 
 
-export function changeGameState(state: Game, row: number, column: number) {
+export function changeGameState(state: Game, row: number, column: number): Game {
+
+    console.log("Row:", row, "Col:", column, "Cell value:", state.board[row]?.[column])
     let boardCopy = structuredClone(state.board)
     let nextPlayer: Player = state.currentPlayer
-    console.log("state-copy:", state.board)
+    console.log("prevBoard", boardCopy[row]![column])
     if (boardCopy[row]![column] === "") {
-        nextPlayer = state.currentPlayer == "X" ? "O" : "X"
-        console.log(boardCopy[row]![column])
         boardCopy[row]![column] = nextPlayer
-
+        nextPlayer = state.currentPlayer == "X" ? "O" : "X"
+        console.log("next player: ", nextPlayer)
     }
 
-
     const result = checkResult(boardCopy)
-    console.log(result)
-
 
     const newGame: Game = {
         currentPlayer: nextPlayer,
@@ -189,11 +187,7 @@ export function changeGameState(state: Game, row: number, column: number) {
         gameId: state.gameId
     }
 
-    console.log("newGame", newGame)
-
-
+    console.log("new board", newGame.board)
 
     return newGame
-
-
 }

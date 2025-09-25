@@ -5,30 +5,29 @@ import GameComponent from './GameComponent'
 
 
 function App() {
-
     const [page, setPage] = useState("home")
-
-    let newGameId: String;
+    const [gameId, setGameId] = useState("")
 
     async function create() {
-
-        let currGames = await getCurrentGames()
-        newGameId = crypto.randomUUID();
-        startNewGame(newGameId)
-
-        setPage("game")
-
-
-
-
+        const newGameId = crypto.randomUUID()
+        setGameId(newGameId)
+        try {
+            await startNewGame(newGameId)
+            setPage("game")
+        } catch (err) {
+            console.log("Failed to start game: ", err)
+        }
     }
 
-
-
     if (page === "home") {
-        return (<button onClick={create}>Create Game</button>)
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <button onClick={create}>Create Game</button>
+            </div>
+
+        )
     } else {
-        return (<GameComponent gameId={newGameId!} />)
+        return (<GameComponent gameId={gameId!} />)
     }
 
 }

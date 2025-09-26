@@ -7,10 +7,25 @@ app.use(cors())
 import { changeGameState } from "./GameState.ts"
 
 import type { Player, Game, Cell, Result } from "../../Types/GameTypes.ts"
+import { testConnection } from "./index.ts"
+
+/*
+async function putInDB(game:Game) {
+    await db.insert(games).values({
+        id:game.gameId,
+        board: game.board,
+        currentPlayer: game.currentPlayer
+
+    })
+    
+}
 
 
+
+*/
 
 app.use(express.json())
+
 
 const empty: Cell = ""
 
@@ -59,17 +74,19 @@ app.get('/', (request: Request, response: Response) => {
     response.send(games)
 })
 
+
+
 // TODO: this is actually "create or join"
-app.post('/join', (request: Request, response: Response) => {
+app.post('/join', async (request: Request, response: Response) => {
     // THE CLIENT CREATES THE ID:
-    console.log("enter join")
     const gameId = crypto.randomUUID()
 
-    console.log(gameId, " joining")
 
     if (games[gameId]) {
         return response.json(games[gameId])
     }
+
+
 
 
     let currentGame: Game = {
@@ -78,11 +95,25 @@ app.post('/join', (request: Request, response: Response) => {
         result: undefined,
         gameId: gameId
     }
+    console.log("hello there")
+    try {
+        await testConnection(currentGame)
+
+    } catch (error) {
+        console.log("ERROR", error)
+
+    }
+
+
+
 
     games[gameId] = currentGame
     response.json(currentGame)
     console.log("new game created: ", currentGame)
 })
+
+
+
 
 
 const PORT = 3000

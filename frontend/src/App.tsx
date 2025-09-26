@@ -23,7 +23,6 @@ function App() {
 
         try {
             console.log("enter create function")
-            debugger
             const game = await startNewGame()
             console.log("object", game.gameId)
             setGameId(game.gameId)

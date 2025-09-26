@@ -11,7 +11,12 @@
   "dependencies": {
     "axios": "^1.12.2",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "drizzle-orm": "^0.44.5",
+    "drizzle-orm-pg": "^0.16.3",
     "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "postgres": "^3.4.7",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
@@ -19,6 +24,8 @@
     "@types/bun": "latest",
     "@types/express": "^5.0.3",
     "@types/react": "^19.1.13",
-    "@types/react-dom": "^19.1.9"
+    "@types/react-dom": "^19.1.9",
+    "drizzle-kit": "^0.31.5",
+    "tsx": "^4.20.6"
   }
 }

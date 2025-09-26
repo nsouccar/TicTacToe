@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { getCurrentGames, startNewGame } from './services/ServerRequests'
+import { getCurrentBoard, getCurrentGames, startNewGame } from './services/ServerRequests'
 import GameComponent from './GameComponent'
 import type { Game } from "../../Types/GameTypes.ts"
 import { motion } from "motion/react"
@@ -12,20 +12,29 @@ function App() {
     const [page, setPage] = useState("home")
     const [gameId, setGameId] = useState("")
     const [currentGames, setCurrentGames] = useState<Record<string, Game> | null>(null)
+    const [gameName, setGameName] = useState("")
 
     useEffect(() => {
         getCurrentGames().then(currentGames => setCurrentGames(currentGames))
     }, [currentGames])
 
     async function create() {
-        const newGameId = crypto.randomUUID()
-        setGameId(newGameId)
+
+
         try {
-            await startNewGame(newGameId)
+            console.log("enter create function")
+            debugger
+            const game = await startNewGame()
+            console.log("object", game.gameId)
+            setGameId(game.gameId)
             setPage("game")
         } catch (err) {
             console.log("Failed to start game: ", err)
         }
+    }
+
+    function handleInputFromPopup(gameName: string) {
+        setGameName(gameName)
     }
 
     function backHome() {
@@ -35,7 +44,7 @@ function App() {
     async function goToGame(event: React.MouseEvent<HTMLButtonElement>) {
         const id = event.currentTarget.id
         await setGameId(id)
-        await startNewGame(gameId)
+        await getCurrentBoard(gameId)
         setPage("game")
 
 

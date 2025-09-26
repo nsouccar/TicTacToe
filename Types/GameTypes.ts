@@ -9,3 +9,7 @@ export type Game = {
     result?: Result
     gameId: string
 }
+
+export type PopupProps = {
+    passDataToApp: (gameName: string) => void
+}

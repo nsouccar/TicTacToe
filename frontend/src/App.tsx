@@ -3,6 +3,9 @@ import { useEffect } from 'react'
 import { getCurrentGames, startNewGame } from './services/ServerRequests'
 import GameComponent from './GameComponent'
 import type { Game } from "../../Types/GameTypes.ts"
+import { motion } from "motion/react"
+import pill from "./assets/pill.png";
+import FuzzyText from './FuzzyText';
 
 
 function App() {
@@ -47,18 +50,30 @@ function App() {
 
 
         return (
-            <div className="flex items-center justify-center h-screen">
-                <button onClick={create}>Create Game</button>
+            <div className="flex flex-col justify-center h-screen bg-black">
+
+
+                <FuzzyText
+                    baseIntensity={0.2}
+                    hoverIntensity={0.5}
+                    enableHover={true}
+                    fontSize={20}
+                >TICTACTOE</FuzzyText>
+
+
+
+
+
+                <button onClick={create} className="text-white">Create Game</button>
                 <ul>
 
                     {
                         Object.entries(currentGames ?? {}).map(([gameId, game]) => (
-                            <li> <button id={gameId} onClick={goToGame}>{gameId}</button></li>
+                            <li> <button className="text-white" id={gameId} onClick={goToGame}>{gameId}</button></li>
                         ))
                     }
 
                 </ul>
-
 
             </div>
 

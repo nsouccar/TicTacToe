@@ -3,9 +3,10 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import type { Game } from "../../Types/GameTypes.ts"
 import { getCurrentBoard, makeMove } from './services/ServerRequests.ts'
+import { motion } from "motion/react"
 
 
-
+let currentColor = "#d2f2ec"
 
 function GameComponent(props: { gameId: String }) {
   const [board, setBoard] = useState<Game | null>(null)
@@ -25,28 +26,40 @@ function GameComponent(props: { gameId: String }) {
     await makeMove([row, col], props.gameId)
 
     const board = await getCurrentBoard(props.gameId)
-    console.log("new board:", board.board)
+
+
 
     setBoard(board)
+    if (board.currentPlayer === "X") {
+      currentColor = "#00f04f"
+    } else {
+      currentColor = "#d2f2ec"
+    }
   }
 
   return (
     <>
-      <header>
+      <div className="flex flex-col items-center ">
+        <h1>{board?.result || ""}</h1>
+        <motion.div className="grid grid-cols-3 grid-rows-3 gap-4 aspect-square w-[50vw]">
+          {board?.board.map((row, rowIndex) =>
+            row.map((cell, colIndex) => (
+              <motion.div
+                whileHover={{ backgroundColor: currentColor }}
 
-      </header>
-      <h1>{board?.result || ""}</h1>
-      <div className="grid grid-cols-3 grid-rows-3 gap-4 place-content-center">
-        <div id="00" onClick={click} className="grid-item">{board?.board[0][0] || ""}</div>
-        <div id="01" onClick={click} className="grid-item">{board?.board[0][1] || ""}</div>
-        <div id="02" onClick={click} className="grid-item">{board?.board[0][2] || ""}</div>
-        <div id="10" onClick={click} className="grid-item">{board?.board[1][0] || ""}</div>
-        <div id="11" onClick={click} className="grid-item">{board?.board[1][1] || ""}</div>
-        <div id="12" onClick={click} className="grid-item">{board?.board[1][2] || ""} </div>
-        <div id="20" onClick={click} className="grid-item">{board?.board[2][0] || ""}</div>
-        <div id="21" onClick={click} className="grid-item">{board?.board[2][1] || ""}</div>
-        <div id="22" onClick={click} className="grid-item">{board?.board[2][2] || ""}</div>
+                key={`${rowIndex}${colIndex}`}
+                id={`${rowIndex}${colIndex}`}
+                onClick={click}
+                className="flex items-center justify-center text-3xl font-bold border border-gray-400"
+              >
+                {cell || ""}
+              </motion.div >
+            ))
+          )
+          }
+        </motion.div >
       </div>
+
 
     </>
   )

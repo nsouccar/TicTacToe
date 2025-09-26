@@ -22,10 +22,9 @@ export function getCurrentGames() {
     return request.then(response => response.data)
 }
 
-export async function startNewGame(gameId: String) {
-    console.log("starting new game")
-    const data = { gameId: gameId };
-    const response = await axios.post(baseUrl + "/join", data)
+export async function startNewGame() {
+
+    const response = await axios.post(baseUrl + "/join")
     console.log("response recived: ", response.data)
     return response.data
 }

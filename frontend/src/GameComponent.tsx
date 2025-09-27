@@ -14,6 +14,7 @@ function GameComponent(props: { gameId: String }) {
 
   useEffect(() => {
     getCurrentBoard(props.gameId).then(currentGame => {
+      console.log("HIIII", currentGame.board)
       setBoard(currentGame)
     })
   }, [props.gameId])

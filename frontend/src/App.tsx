@@ -76,8 +76,8 @@ function App() {
                 <ul>
 
                     {
-                        Object.entries(currentGames ?? {}).map(([gameId, game]) => (
-                            <li> <button className="text-white" id={gameId} onClick={goToGame}>{gameId}</button></li>
+                        Object.entries(currentGames ?? {}).map((game) => (
+                            <li> <button className="text-white" id={game[1].gameId} onClick={goToGame}>{game[1].gameId}</button></li>
                         ))
                     }
 

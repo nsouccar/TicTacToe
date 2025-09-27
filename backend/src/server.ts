@@ -7,22 +7,8 @@ app.use(cors())
 import { changeGameState } from "./GameState.ts"
 
 import type { Player, Game, Cell, Result } from "../../Types/GameTypes.ts"
-import { testConnection } from "./index.ts"
+import { addGameToDB, getGamesFromDB, updateDB } from "./index.ts"
 
-/*
-async function putInDB(game:Game) {
-    await db.insert(games).values({
-        id:game.gameId,
-        board: game.board,
-        currentPlayer: game.currentPlayer
-
-    })
-    
-}
-
-
-
-*/
 
 app.use(express.json())
 
@@ -37,55 +23,65 @@ const initialBoard = [
 
 // gameId1: {game1}
 // gameId2: {game2}
-let games: Record<string, Game> = {}
 
-app.use((req, res, next) => {
-    console.log("Incoming request:", req.method, req.url);
-    next();
-});
+async function checkForGame(gameId: string) {
+    const gamesInDB = await getGamesFromDB()
+
+    const game = gamesInDB.find(g => g.gameId.trim() === gameId.trim())
+    if (game) {
+        console.log("current game: ", game)
+        return (game)
+
+    } else {
+        return null
+    }
+
+}
 
 
-app.get('/:id/play', (request: Request, response: Response) => {
+
+app.get('/:id/play', async (request: Request, response: Response) => {
     const gameId = request.params.id as string
-    console.log("current game: ", gameId)
-    if (games[gameId]) {
-        console.log("current game: ", games[gameId])
-        response.send(games[gameId])
+    let gameExists = await checkForGame(gameId)
 
+
+    if (gameExists) {
+        response.send(gameExists)
     } else {
         response.status(404).send("Page not found")
     }
+
+
+
+
 })
 
-app.post('/:id/play', (request: Request, response: Response) => {
+app.post('/:id/play', async (request: Request, response: Response) => {
+    debugger
     const gameId = request.params.id as string
-    if (games[gameId]) {
-        let game = games[gameId]
-        console.log(`request ${request.body}`)
+    let gameExists = await checkForGame(gameId)
+    console.log("THIS IS THE GAME", gameExists)
+    if (gameExists) {
         const move = request.body.move
-        games[gameId] = changeGameState(game!, move[0], move[1])
-        response.send(games[gameId])
+        const newBoard = changeGameState(gameExists as Game, move[0], move[1])
+        await updateDB(gameId, newBoard)
+        response.send("Move made")
     } else {
         response.status(404).send("Page not found")
     }
 })
 
-app.get('/', (request: Request, response: Response) => {
-    response.send(games)
+app.get('/', async (request: Request, response: Response) => {
+    const gamesInDB = await getGamesFromDB()
+    return response.send(gamesInDB)
 })
 
 
 
 // TODO: this is actually "create or join"
 app.post('/join', async (request: Request, response: Response) => {
-    // THE CLIENT CREATES THE ID:
+
     const gameId = crypto.randomUUID()
-
-
-    if (games[gameId]) {
-        return response.json(games[gameId])
-    }
-
 
 
 
@@ -95,21 +91,21 @@ app.post('/join', async (request: Request, response: Response) => {
         result: undefined,
         gameId: gameId
     }
-    console.log("hello there")
     try {
-        await testConnection(currentGame)
+        await addGameToDB(currentGame)
+        return response.json(currentGame)
 
     } catch (error) {
-        console.log("ERROR", error)
+        return (error)
 
     }
 
 
 
 
-    games[gameId] = currentGame
+    // games[gameId] = currentGame
     response.json(currentGame)
-    console.log("new game created: ", currentGame)
+    // console.log("new game created: ", currentGame)
 })
 
 
@@ -119,4 +115,7 @@ app.post('/join', async (request: Request, response: Response) => {
 const PORT = 3000
 app.listen(PORT, () => {
 })
+
+
+
 

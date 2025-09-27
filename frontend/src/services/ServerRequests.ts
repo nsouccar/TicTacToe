@@ -4,10 +4,11 @@ import type { Game } from "../../../Types/GameTypes.ts"
 const baseUrl = "http://localhost:3000"
 
 export function getCurrentBoard(gameId: String): Promise<Game> {
+
     const url = `${baseUrl}/${gameId}/play`
     console.log(`game ID = ${gameId}`)
     console.log(url);
-    const request = axios.get(url)
+    const request = axios.get(baseUrl + "/" + gameId + "/play")
     return request.then(response => response.data)
 }
 
@@ -28,6 +29,7 @@ export async function startNewGame() {
     console.log("response recived: ", response.data)
     return response.data
 }
+
 
 
 

@@ -5,6 +5,7 @@ import GameComponent from './GameComponent'
 import type { Game } from "../../Types/GameTypes.ts"
 import { motion } from "motion/react"
 import pill from "./assets/pill.png";
+import Popup from './Popup.tsx'
 import FuzzyText from './FuzzyText';
 
 
@@ -18,23 +19,11 @@ function App() {
         getCurrentGames().then(currentGames => setCurrentGames(currentGames))
     }, [currentGames])
 
-    async function create() {
-
-
-        try {
-            console.log("enter create function")
-            const game = await startNewGame()
-            console.log("object", game.gameId)
-            setGameId(game.gameId)
-            setPage("game")
-        } catch (err) {
-            console.log("Failed to start game: ", err)
-        }
+    function create() {
+        setPage("popup")
     }
 
-    function handleInputFromPopup(gameName: string) {
-        setGameName(gameName)
-    }
+
 
     function backHome() {
         setPage("home")
@@ -49,35 +38,42 @@ function App() {
 
     }
 
+    async function getData(name: string) {
+
+        try {
+            console.log("GMMMMMNAME", name)
+            const game = await startNewGame(name)
+            setGameId(game.gameId)
+            setGameName(name)
+            setPage("game")
+        } catch (err) {
+            return (err)
+
+        }
+
+
+    }
+
 
 
     if (page === "home") {
-
-
-
-
-
         return (
-            <div className="flex flex-col justify-center h-screen bg-black">
+            <div className="flex flex-col items-center justify-center h-screen bg-black">
 
 
                 <FuzzyText
                     baseIntensity={0.2}
-                    hoverIntensity={0.5}
+                    hoverIntensity={1}
                     enableHover={true}
-                    fontSize={20}
+                    fontSize={30}
                 >TICTACTOE</FuzzyText>
-
-
-
-
 
                 <button onClick={create} className="text-white">Create Game</button>
                 <ul>
 
                     {
                         Object.entries(currentGames ?? {}).map((game) => (
-                            <li> <button className="text-white" id={game[1].gameId} onClick={goToGame}>{game[1].gameId}</button></li>
+                            <li> <button className="text-white" id={game[1].gameId} onClick={goToGame}>{game[1].name}</button></li>
                         ))
                     }
 
@@ -86,10 +82,17 @@ function App() {
             </div>
 
         )
-    } else {
+    } else if (page === "popup") {
+        return (
+            <Popup passDataToApp={getData} />
+        )
+    }
+
+
+    else {
         return (
             <>
-                <GameComponent gameId={gameId!} />
+                <GameComponent gameId={gameId!} gameName={gameName} />
                 <button onClick={backHome}>Back</button >
             </>
 

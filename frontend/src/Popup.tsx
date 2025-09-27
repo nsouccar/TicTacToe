@@ -1,8 +1,13 @@
-export default function Popup({ passDataToApp }) {
+
+import type { PopupProps } from "../../Types/GameTypes"
+
+
+
+export default function Popup(props: PopupProps) {
 
     function passData() {
         const gameName = (document.getElementById("input-field")! as HTMLInputElement).value
-        passDataToApp(gameName)
+        props.passDataToApp(gameName)
 
     }
     return (

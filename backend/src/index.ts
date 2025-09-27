@@ -25,7 +25,8 @@ export async function addGameToDB(game: Game) {
             gameId: game.gameId,
             board: game.board,
             result: "",
-            currentPlayer: game.currentPlayer
+            currentPlayer: game.currentPlayer,
+            name: game.name
         }
 
 

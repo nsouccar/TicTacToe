@@ -8,13 +8,13 @@ import { motion } from "motion/react"
 
 let currentColor = "#d2f2ec"
 
-function GameComponent(props: { gameId: String }) {
+function GameComponent(props: { gameId: String, gameName: String }) {
+  console.log("GAMENAME", props.gameName)
   const [board, setBoard] = useState<Game | null>(null)
   const [cellClicked, setCell] = useState<number[] | null>(null)
 
   useEffect(() => {
     getCurrentBoard(props.gameId).then(currentGame => {
-      console.log("HIIII", currentGame.board)
       setBoard(currentGame)
     })
   }, [props.gameId])
@@ -41,7 +41,7 @@ function GameComponent(props: { gameId: String }) {
   return (
     <>
       <div className="flex flex-col items-center ">
-        <h1>{board?.result || ""}</h1>
+        <h1 className="font-bold">{(board?.result + " wins!") || ""}</h1>
         <motion.div className="grid grid-cols-3 grid-rows-3 gap-4 aspect-square w-[50vw]">
           {board?.board.map((row, rowIndex) =>
             row.map((cell, colIndex) => (

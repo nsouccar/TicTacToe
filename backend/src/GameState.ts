@@ -140,6 +140,7 @@ const allPossibleWinCombinations: WinningCombination[] = [
 ]
 
 function checkResult(board: Cell[][]): Result {
+    console.log("RESULT")
 
     let isFull: Boolean = true
 
@@ -184,7 +185,8 @@ export function changeGameState(state: Game, row: number, column: number): Game 
         currentPlayer: nextPlayer,
         board: boardCopy,
         result: result,
-        gameId: state.gameId
+        gameId: state.gameId,
+        name: state.name
     }
 
     console.log("new board", newGame.board)

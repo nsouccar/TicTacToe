@@ -23,9 +23,9 @@ export function getCurrentGames() {
     return request.then(response => response.data)
 }
 
-export async function startNewGame() {
+export async function startNewGame(gameName: string) {
 
-    const response = await axios.post(baseUrl + "/join")
+    const response = await axios.post(baseUrl + "/join", { gameName })
     console.log("response recived: ", response.data)
     return response.data
 }

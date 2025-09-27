@@ -21,8 +21,7 @@ const initialBoard = [
     [empty, empty, empty]
 ]
 
-// gameId1: {game1}
-// gameId2: {game2}
+
 
 async function checkForGame(gameId: string) {
     const gamesInDB = await getGamesFromDB()
@@ -60,7 +59,6 @@ app.post('/:id/play', async (request: Request, response: Response) => {
     debugger
     const gameId = request.params.id as string
     let gameExists = await checkForGame(gameId)
-    console.log("THIS IS THE GAME", gameExists)
     if (gameExists) {
         const move = request.body.move
         const newBoard = changeGameState(gameExists as Game, move[0], move[1])
@@ -78,10 +76,10 @@ app.get('/', async (request: Request, response: Response) => {
 
 
 
-// TODO: this is actually "create or join"
 app.post('/join', async (request: Request, response: Response) => {
 
     const gameId = crypto.randomUUID()
+    console.log("SKLDJAHFKJHSDF", request.body.gameName)
 
 
 
@@ -89,7 +87,8 @@ app.post('/join', async (request: Request, response: Response) => {
         currentPlayer: "X",
         board: initialBoard,
         result: undefined,
-        gameId: gameId
+        gameId: gameId,
+        name: request.body.gameName
     }
     try {
         await addGameToDB(currentGame)
